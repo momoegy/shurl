@@ -17,7 +17,7 @@ post '/' => sub {
 	my $url		= $self->param( 'url' );
 	my $hash	= sha1_hex( $url );
 
-	$urls{ $url } = $hash;
+	$urls{ $hash } = $url;
 
 	$self->stash( url	=> $url );
 	$self->stash( hash	=> $hash );
@@ -31,8 +31,7 @@ get '/:hash' => sub {
 	my $self = shift;
 	my $hash = $self->param( 'hash' );
 
-	my %r	= reverse %urls;
-	my $url	= $r{ $hash };
+	my $url	= $urls{ $hash };
 	
 	$self->redirect_to( $url );
 
