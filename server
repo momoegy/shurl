@@ -1,0 +1,41 @@
+#!/usr/bin/env perl
+use Modern::Perl;
+use lib 'vendor/mojo/lib';
+use Mojolicious::Lite;
+use Digest::SHA qw/sha1_hex/;
+
+my %urls;
+
+get '/' => sub {
+  my $self = shift;
+  $self->render('index');
+};
+
+post '/' => sub {
+
+	my $self	= shift;
+	my $url		= $self->param( 'url' );
+	my $hash	= sha1_hex( $url );
+
+	$urls{ $url } = $hash;
+
+	$self->stash( url	=> $url );
+	$self->stash( hash	=> $hash );
+
+	$self->render( 'success' );
+
+};
+
+get '/:hash' => sub {
+
+	my $self = shift;
+	my $hash = $self->param( 'hash' );
+
+	my %r	= reverse %urls;
+	my $url	= $r{ $hash };
+	
+	$self->redirect_to( $url );
+
+};
+
+app->start;

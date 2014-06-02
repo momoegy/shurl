@@ -1,0 +1,7 @@
+% layout 'default';
+% title 'Welcome';
+
+<h1>Success</h1>
+
+<p>We have transformed the URL <code><%= $url %></code> to <code><a href="/<%= $hash %>"><%= $hash %></a>.</p>
+
