@@ -7,8 +7,10 @@ use Digest::SHA qw/sha1_hex/;
 my %urls;
 
 get '/' => sub {
-  my $self = shift;
-  $self->render('index');
+
+	my $self = shift;
+	$self->render( 'index' );
+
 };
 
 post '/' => sub {
@@ -16,6 +18,18 @@ post '/' => sub {
 	my $self	= shift;
 	my $url		= $self->param( 'url' );
 	my $hash	= sha1_hex( $url );
+
+	#	now some validation
+	my $invalid;
+
+	$invalid++ unless $url =~ m|^https?://|;
+
+	if ( $invalid ) {
+
+		return $self->redirect_to( 'error' );
+
+	}
+
 
 	$urls{ $hash } = $url;
 
